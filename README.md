@@ -171,17 +171,6 @@ obvious).
   o_scale = 1/48r
   ```
 
-  Another exception is the safe navigation operator:
-  ```ruby
-  # bad
-  foo &. bar
-  foo &.bar
-  foo&. bar
-
-  # good
-  foo&.bar
-  ```
-
 * <a name="spaces-braces"></a>
   No spaces after `(`, `[` or before `]`, `)`.
   Use spaces around `{` and before `}`.
@@ -413,23 +402,6 @@ obvious).
   end
   ```
 
-* <a name="no-trailing-params-comma"></a>
-  Avoid comma after the last parameter in a method call, especially when the
-  parameters are not on separate lines.
-<sup>[[link](#no-trailing-params-comma)]</sup>
-
-  ```ruby
-  # bad - easier to move/add/remove parameters, but still not preferred
-  some_method(
-    size,
-    count,
-    color,
-  )
-
-  # good
-  some_method(size, count, color)
-  ```
-
 * <a name="spaces-around-equals"></a>
   Use spaces around the `=` operator when assigning default values to method
   parameters:
@@ -449,24 +421,6 @@ obvious).
 
   While several Ruby books suggest the first style, the second is much more
   prominent in practice (and arguably a bit more readable).
-
-* <a name="no-trailing-backslash"></a>
-  Avoid line continuation `\` where not required. In practice, avoid using
-  line continuations for anything but string concatenation.
-<sup>[[link](#no-trailing-backslash)]</sup>
-
-  ```ruby
-  # bad
-  result = 1 - \
-           2
-
-  # good (but still ugly as hell)
-  result = 1 \
-           - 2
-
-  long_string = 'First part of the long string' \
-                ' and second part of the long string'
-  ```
 
 * <a name="consistent-multi-line-chains"></a>
     Adopt a consistent multi-line method chaining style. There are two popular
@@ -616,23 +570,6 @@ obvious).
 * <a name="newline-eof"></a>
   End each file with a newline.
 <sup>[[link](#newline-eof)]</sup>
-
-* <a name="no-block-comments"></a>
-    Don't use block comments. They cannot be preceded by whitespace and are not
-    as easy to spot as regular comments.
-<sup>[[link](#no-block-comments)]</sup>
-
-  ```ruby
-  # bad
-  =begin
-  comment line
-  another comment line
-  =end
-
-  # good
-  # comment line
-  # another comment line
-  ```
 
 ## Syntax
 
@@ -822,40 +759,6 @@ obvious).
   hello_array = *'Hello' # => ["Hello"]
 
   a = *(1..3) # => [1, 2, 3]
-  ```
-
-* <a name="trailing-underscore-variables"></a>
-  Avoid the use of unnecessary trailing underscore variables during
-  parallel assignment. Named underscore variables are to be preferred over
-  underscore variables because of the context that they provide.
-  Trailing underscore variables are necessary when there is a splat variable
-  defined on the left side of the assignment, and the splat variable is
-  not an underscore.
-<sup>[[link]](#trailing-underscore-variables)</sup>
-
-  ```ruby
-  # bad
-  foo = 'one,two,three,four,five'
-  # Unnecessary assignment that does not provide useful information
-  first, second, _ = foo.split(',')
-  first, _, _ = foo.split(',')
-  first, *_ = foo.split(',')
-
-
-  # good
-  foo = 'one,two,three,four,five'
-  # The underscores are needed to show that you want all elements
-  # except for the last number of underscore elements
-  *beginning, _ = foo.split(',')
-  *beginning, something, _ = foo.split(',')
-
-  a, = foo.split(',')
-  a, b, = foo.split(',')
-  # Unnecessary assignment to an unused variable, but the assignment
-  # provides us with useful information.
-  first, _second = foo.split(',')
-  first, _second, = foo.split(',')
-  first, *_ending = foo.split(',')
   ```
 
 * <a name="ternary-operator"></a>
@@ -1170,33 +1073,6 @@ condition](#safe-assignment-in-condition).
   end
   ```
 
-* <a name="no-braces-opts-hash"></a>
-  Omit the outer braces around an implicit options hash.
-<sup>[[link](#no-braces-opts-hash)]</sup>
-
-  ```ruby
-  # bad
-  user.set({ name: 'John', age: 45, permissions: { read: true } })
-
-  # good
-  user.set(name: 'John', age: 45, permissions: { read: true })
-  ```
-
-* <a name="no-dsl-decorating"></a>
-  Omit both the outer braces and parentheses for methods that are part of an
-  internal DSL.
-<sup>[[link](#no-dsl-decorating)]</sup>
-
-  ```ruby
-  class Person < ActiveRecord::Base
-    # bad
-    validates(:name, { presence: true, length: { within: 1..10 } })
-
-    # good
-    validates :name, presence: true, length: { within: 1..10 }
-  end
-  ```
-
 * <a name="single-action-blocks"></a>
   Use the proc invocation shorthand when the invoked method is the only operation of a block.
 <sup>[[link](#single-action-blocks)]</sup>
@@ -1306,37 +1182,6 @@ condition](#safe-assignment-in-condition).
       self.status = :in_progress
     end
     status == :verified
-  end
-  ```
-
-* <a name="no-shadowing"></a>
-  As a corollary, avoid shadowing methods with local variables unless they are
-  both equivalent.
-<sup>[[link](#no-shadowing)]</sup>
-
-  ```ruby
-  class Foo
-    attr_accessor :options
-
-    # ok
-    def initialize(options)
-      self.options = options
-      # both options and self.options are equivalent here
-    end
-
-    # bad
-    def do_something(options = {})
-      unless options[:when] == :later
-        output(self.options[:message])
-      end
-    end
-
-    # good
-    def do_something(params = {})
-      unless params[:when] == :later
-        output(options[:message])
-      end
-    end
   end
   ```
 
@@ -1473,21 +1318,6 @@ condition](#safe-assignment-in-condition).
   # good
   'ruby' == some_str
   1.0.eql? x # eql? makes sense here if want to differentiate between Integer and Float 1
-  ```
-
-* <a name="no-cryptic-perlisms"></a>
-  Avoid using Perl-style special variables (like `$:`, `$;`, etc. ). They are
-  quite cryptic and their use in anything but one-liner scripts is discouraged.
-  Use the human-friendly aliases provided by the `English` library.
-<sup>[[link](#no-cryptic-perlisms)]</sup>
-
-  ```ruby
-  # bad
-  $:.unshift File.dirname(__FILE__)
-
-  # good
-  require 'English'
-  $LOAD_PATH.unshift File.dirname(__FILE__)
   ```
 
 * <a name="parens-no-spaces"></a>
@@ -1668,44 +1498,6 @@ no parameters.
   warn level to 0 via `-W0`).
 <sup>[[link](#warn)]</sup>
 
-* <a name="sprintf"></a>
-  Favor the use of `sprintf` and its alias `format` over the fairly cryptic
-  `String#%` method.
-<sup>[[link](#sprintf)]</sup>
-
-  ```ruby
-  # bad
-  '%d %d' % [20, 10]
-  # => '20 10'
-
-  # good
-  sprintf('%d %d', 20, 10)
-  # => '20 10'
-
-  # good
-  sprintf('%<first>d %<second>d', first: 20, second: 10)
-  # => '20 10'
-
-  format('%d %d', 20, 10)
-  # => '20 10'
-
-  # good
-  format('%<first>d %<second>d', first: 20, second: 10)
-  # => '20 10'
-  ```
-
-* <a name="named-format-tokens"></a>
-  When using named format string tokens, favor `%<name>s` over `%{name}` because it encodes information about the type of the value.
-<sup>[[link]](#named-format-tokens)</sup>
-
-  ```ruby
-  # bad
-  format('Hello, %{name}', name: 'John')
-
-  # good
-  format('Hello, %<name>s', name: 'John')
-  ```
-
 * <a name="array-join"></a>
   Favor the use of `Array#join` over the fairly cryptic `Array#*` with
   a string argument.
@@ -1719,24 +1511,6 @@ no parameters.
   # good
   %w[one two three].join(', ')
   # => 'one, two, three'
-  ```
-
-* <a name="array-coercion"></a>
-  Use `Array()` instead of explicit `Array` check or `[*var]`, when dealing
-  with a variable you want to treat as an Array, but you're not certain it's an
-  array.
-<sup>[[link](#array-coercion)]</sup>
-
-  ```ruby
-  # bad
-  paths = [paths] unless paths.is_a? Array
-  paths.each { |path| do_something(path) }
-
-  # bad (always creates a new Array instance)
-  [*paths].each { |path| do_something(path) }
-
-  # good (and a bit more readable)
-  Array(paths).each { |path| do_something(path) }
   ```
 
 * <a name="ranges-or-between"></a>
@@ -1811,17 +1585,6 @@ no parameters.
   Avoid the use of `BEGIN` blocks.
 <sup>[[link](#no-BEGIN-blocks)]</sup>
 
-* <a name="no-END-blocks"></a>
-  Do not use `END` blocks. Use `Kernel#at_exit` instead.
-<sup>[[link](#no-END-blocks)]</sup>
-
-  ```ruby
-  # bad
-  END { puts 'Goodbye!' }
-
-  # good
-  at_exit { puts 'Goodbye!' }
-  ```
 
 * <a name="no-flip-flops"></a>
   Avoid the use of flip-flops.
