@@ -224,32 +224,6 @@ obvious).
   "From: #{user.first_name}, #{user.last_name}"
   ```
 
-* <a name="no-space-bang"></a>
-  No space after `!`.
-<sup>[[link](#no-space-bang)]</sup>
-
-  ```ruby
-  # bad
-  ! something
-
-  # good
-  !something
-  ```
-
-* <a name="no-space-inside-range-literals"></a>
-  No space inside range literals.
-<sup>[[link](#no-space-inside-range-literals)]</sup>
-
-    ```ruby
-    # bad
-    1 .. 3
-    'a' ... 'z'
-
-    # good
-    1..3
-    'a'...'z'
-    ```
-
 * <a name="indent-when-to-case"></a>
   Indent `when` as deep as `case`. This is the style established in both
   "The Ruby Programming Language" and "Programming Ruby".
@@ -451,9 +425,6 @@ obvious).
     count,
     color,
   )
-
-  # bad
-  some_method(size, count, color, )
 
   # good
   some_method(size, count, color)
@@ -702,20 +673,10 @@ obvious).
   ```
 
 * <a name="method-parens"></a>
-    Use `def` with parentheses when there are parameters. Omit the
-    parentheses when the method doesn't accept any parameters.
+    Use `def` with parentheses when there are parameters.
 <sup>[[link](#method-parens)]</sup>
 
    ```ruby
-   # bad
-   def some_method()
-     # body omitted
-   end
-
-   # good
-   def some_method
-     # body omitted
-   end
 
    # bad
    def some_method_with_parameters param1, param2
@@ -767,15 +728,6 @@ obvious).
     2.even?
     fork
     'test'.upcase
-    ```
-
-  * Methods that are part of an internal DSL (e.g., Rake, Rails, RSpec):
-
-    ```ruby
-    # bad
-    validates(:name, presence: true)
-    # good
-    validates :name, presence: true
     ```
 
   * Methods that have "keyword" status in Ruby:
@@ -906,68 +858,6 @@ obvious).
   first, *_ending = foo.split(',')
   ```
 
-* <a name="no-for-loops"></a>
-    Do not use `for`, unless you know exactly why. Most of the time iterators
-    should be used instead. `for` is implemented in terms of `each` (so you're
-    adding a level of indirection), but with a twist&mdash;`for` doesn't
-    introduce a new scope (unlike `each`) and variables defined in its block
-    will be visible outside it.
-<sup>[[link](#no-for-loops)]</sup>
-
-  ```ruby
-  arr = [1, 2, 3]
-
-  # bad
-  for elem in arr do
-    puts elem
-  end
-
-  # note that elem is accessible outside of the for loop
-  elem # => 3
-
-  # good
-  arr.each { |elem| puts elem }
-
-  # elem is not accessible outside each's block
-  elem # => NameError: undefined local variable or method `elem'
-  ```
-
-* <a name="no-then"></a>
-  Do not use `then` for multi-line `if`/`unless`.
-<sup>[[link](#no-then)]</sup>
-
-  ```ruby
-  # bad
-  if some_condition then
-    # body omitted
-  end
-
-  # good
-  if some_condition
-    # body omitted
-  end
-  ```
-
-* <a name="same-line-condition"></a>
-  Always put the condition on the same line as the `if`/`unless` in a
-  multi-line conditional.
-<sup>[[link](#same-line-condition)]</sup>
-
-  ```ruby
-  # bad
-  if
-    some_condition
-    do_something
-    do_something_else
-  end
-
-  # good
-  if some_condition
-    do_something
-    do_something_else
-  end
-  ```
-
 * <a name="ternary-operator"></a>
   Favor the ternary operator(`?:`) over `if/then/else/end` constructs.
   It's more common and obviously more concise.
@@ -1077,33 +967,6 @@ obvious).
   if x
     # body omitted
   end
-  ```
-
-* <a name="no-and-or-or"></a>
-  The `and` and `or` keywords are banned. The minimal added readability is just
-  not worth the high probability of introducing subtle bugs. For boolean
-  expressions, always use `&&` and `||` instead. For flow control, use
-  `if` and `unless`; `&&` and `||` are also acceptable but less clear.
-<sup>[[link](#no-and-or-or)]</sup>
-
-  ```ruby
-  # bad
-  # boolean expression
-  ok = got_needed_arguments and arguments_are_valid
-
-  # control flow
-  document.save or raise("Failed to save document!")
-
-  # good
-  # boolean expression
-  ok = got_needed_arguments && arguments_are_valid
-
-  # control flow
-  raise("Failed to save document!") unless document.save
-
-  # ok
-  # control flow
-  document.save || raise("Failed to save document!")
   ```
 
 * <a name="no-multiline-ternary"></a>
